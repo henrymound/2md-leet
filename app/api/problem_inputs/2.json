@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "input": "(create_list_nodes([2,4,3]), create_list_nodes([5,6,4]))",
+      "displayInput": "[2,4,3], [5,6,4]",
+      "processOutput": "listnode_to_array",
+      "output": "[7,0,8]"
+    },
+    {
+      "input": "(create_list_nodes([0]), create_list_nodes([0]))",
+      "processOutput": "listnode_to_array",
+      "displayInput": "[0], [0]",
+      "output": "[0]"
+    },
+    {
+      "input": "(create_list_nodes([9, 9, 9, 9, 9, 9, 9]), create_list_nodes([9, 9, 9, 9]))",
+      "processOutput": "listnode_to_array",
+      "displayInput": "[9, 9, 9, 9, 9, 9, 9], [9, 9, 9, 9]",
+      "output": "[8, 9, 9, 9, 0, 0, 0, 1]"
+    }
+  ],
+  "functionName": "addTwoNumbers",
+  "baseCode": "class ListNode:\n    def __init__(self, val=0, next=None):\n        self.val = val\n        self.next = next"
+}

@@ -3,6 +3,8 @@ import {join} from 'path';
 import matter from 'gray-matter';
 
 const docsDirectory = join(process.cwd(), 'app/api/problems');
+const inputsDirectory = join(process.cwd(), 'app/api/problem_inputs');
+const solutionsDirectory = join(process.cwd(), 'app/api/solutions');
 type ResponseData = {
     content: string
 }
@@ -14,9 +16,17 @@ export async function POST(
         const reqContent = await req.json();
         const {problemNumber: number} = reqContent;
         const filePath = `${number}.md`;
+        const solutionPath = `${number}.py`;
+        const inputPath = `${number}.json`;
         const fullPath = join(docsDirectory, `${filePath}`);
+        const fullSolutionPath = join(solutionsDirectory, `${solutionPath}`);
+        const fullInputPath = join(inputsDirectory, `${inputPath}`);
         const fileContents = fs.readFileSync(fullPath, 'utf8');
+        const solutionFileContents = fs.readFileSync(fullSolutionPath, 'utf8');
+        const inputFileContents = fs.readFileSync(fullInputPath, 'utf8');
         const {data, content} = matter(fileContents);
+        const {data: inputData, content: inputContent} = matter(inputFileContents);
+        const {data: solutionData, content: solutionContent} = matter(solutionFileContents);
         // const htmlFile = await unified()
         //     .use(remarkParse)
         //     .use(remarkRehype)
@@ -27,7 +37,9 @@ export async function POST(
         const markdown = content
 
         return Response.json({
-            content: markdown
+            content: markdown,
+            inputContent: inputContent,
+            solutionContent: solutionContent,
         }, {
             status: 200,
         });

@@ -39,6 +39,8 @@ export const getProblem = async (number: number): Promise<Problem> => {
                 id: number,
                 title: `Problem ${number}`,
                 description: `Problem ${number} description`,
+                input: JSON.parse(json.inputContent),
+                solution: json.solutionContent,
             }
         } else {
             throw new Error("Invalid response")

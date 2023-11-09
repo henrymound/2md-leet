@@ -1,12 +1,10 @@
 "use client";
-import React, {Fragment} from "react";
+import React, {Fragment, useEffect} from "react";
 import {highlight, languages} from 'prismjs'
 import Editor from "react-simple-code-editor";
 import dedent from 'dedent';
 import {Box, Button, Popover, Typography} from "@mui/material";
-
-require('prismjs/components/prism-python');
-require('prismjs/components/prism-json');
+import "./text.css"
 
 export enum THEME_TO_BG {
     PRISM_FUNKY = "black",
@@ -84,88 +82,53 @@ export enum THEME_TO_BG {
 // };
 
 export const AddToQueue = (props: {
-    theme: THEME_TO_BG
+    problem: number
+    theme?: THEME_TO_BG,
+    data: Promise<Problem>
 }) => {
-    switch (props.theme) {
-        case THEME_TO_BG.PRISM_FUNKY:
-            require('prismjs/themes/prism-tomorrow.css');
-            break;
-        case THEME_TO_BG.PRISM_OKAIDIA:
-            require('prismjs/themes/prism-okaidia.css');
-            break;
-        case THEME_TO_BG.TWILIGHT:
-            require('prismjs/themes/prism-twilight.css');
-            break;
-        case THEME_TO_BG.SOLARISED_DARK:
-            require('prismjs/themes/prism-solarizedlight.css');
-            break;
-        case THEME_TO_BG.SOLARIZED_LIGHT:
-            require('prismjs/themes/prism-solarizedlight.css');
-            break;
-        case THEME_TO_BG.TOMORROW:
-            require('prismjs/themes/prism-tomorrow.css');
-            break;
-        default:
-            require('prismjs/themes/prism-tomorrow.css');
-            break;
-    }
-
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
+    require('prismjs/components/prism-python');
+    require('prismjs/components/prism-json');
+    // require('prismjs/themes/prism-coy.css');
     const [modalContent, setModalContent] = React.useState([""])
-
     const [content, setContent] = React.useState({
         code: dedent`
-            def pipeline(config, input):
-                keys = []
-                totalLength = 0
-                for i in input.values():
-                    if isinstance(i, str):
-                      keys.append("Input Val Found: " + i)
-                      totalLength += len(i)
-                    
-                return ["Keys have a total length of " + str(totalLength), keys]
-               ### Ask gpt-3.5-turbo with some prompt template to generate an email
-               # return openai.ChatCompletion.create(...)
+            
    `,
     })
-    const [configs, setConfigs] = React.useState({
-        code: dedent`
-             [
-                {
-                    "topic": "enterprise SaaS pitch",
-                    "input_metadata": {
-                        "importance": 0.9
-                    },
-                },
-                {
-                    "topic": "marketing campaign",
-                    "input_metadata": {
-                        "importance": 0.5
-                    }
-                }
-            ]`,
-    })
-    const [inputs, setInputs] = React.useState({
-        code: dedent`
-            [
-                {
-                    "model": "gpt-3.5-turbo",
-                    "temperature": 0.5
-                },
-                {
-                    "model": "gpt-4",
-                    "temperature": 0
-                }
-            ]
-           `
-    })
+    useEffect(() => {
+        Promise.resolve(props.data).then((problem) => {
+            console.log(problem.solution)
+            setContent({code: problem.solution})
+        })
+    }, []);
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+        addToQueue(content.code, props.problem, () => {
+        }).then(r => {
+            console.log(r.json().then((json: any) => {
+                console.log(JSON.stringify(json))
+                console.log(json.result)
+                const newModalContent = json.result
+                console.log(newModalContent)
+                setModalContent(newModalContent)
 
+            }))
+            console.log(r)
+        })
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
     return (
         <Fragment>
-            <Box bgcolor={"transparent"}>
+            <Box className="prose lg:prose-xl px-8 m-auto my-4 sm:my-16"
+            >
                 <Popover
+                    anchorEl={anchorEl}
                     anchorOrigin={{
                         vertical: 'center',
                         horizontal: 'center',
@@ -174,6 +137,7 @@ export const AddToQueue = (props: {
                         vertical: 'center',
                         horizontal: 'center',
                     }}
+                    id={id}
                     open={open}
                     onClose={handleClose}
                     aria-labelledby="modal-modal-title"
@@ -193,17 +157,21 @@ export const AddToQueue = (props: {
 
                 <main>
                     <div>
-                        {/*<a*/}
-                        {/*    className="button"*/}
-                        {/*    href="https://github.com/henrymound"*/}
-                        {/*>*/}
-                        {/*    GitHub*/}
-                        {/*</a>*/}
-                        {/*<br/>*/}
-                        {/*<br/>*/}
-                        <h1>Pipeline</h1>
+                        <Box display={"flex"} justifyContent={"space-between"} textAlign={"center"} width={"100%"}>
+                            <h3 style={{marginTop: "0"}}>Solution</h3>
+                            <div><Button variant="contained" style={{backgroundColor: "#4193ff"}}
+                                         onClick={handleClick} aria-describedby={id}>Run</Button></div>
+                        </Box>
+
+                        {/*<code>*/}
                         <Editor
-                            style={{backgroundColor: props.theme, color: "white"}}
+                            style={{
+                                background: "#272822",
+                                borderRadius: "10px",
+                                // color: props.theme === THEME_TO_BG.SOLARIZED_LIGHT ? "black" : "white"
+                            }}
+
+                            textareaClassName={"language-python"}
                             placeholder="Type some code…"
                             value={`${content.code}`}
                             onValueChange={(code) => {
@@ -213,54 +181,9 @@ export const AddToQueue = (props: {
                             highlight={(code) => highlight(code, languages.python!, 'python')}
                             padding={10}
                             className={"language-python"}
+                            preClassName={"language-python-pre"}
                         />
-                        <h1>Inputs</h1>
-                        <Editor
-                            style={{backgroundColor: props.theme}}
-                            placeholder="Type some code…"
-                            value={inputs.code}
-                            onValueChange={(inputs) => {
-                                console.log(inputs)
-                                setInputs({code: inputs})
-                            }}
-                            highlight={(code) => highlight(code, languages.json!, 'json')}
-                            padding={10}
-                            className={"language-json"}
 
-                        />
-                        <h1>Configs</h1>
-                        <Editor
-                            style={{backgroundColor: props.theme}}
-                            placeholder="Type some code…"
-                            value={configs.code}
-                            onValueChange={(code) => {
-                                console.log(code)
-                                setConfigs({code: code})
-                            }}
-                            highlight={(code) => highlight(code, languages.json!, 'json')}
-                            padding={10}
-                            className="language-json"
-                        />
-                        <div><Button variant="contained" style={{backgroundColor: "#4193ff"}} onClick={() => {
-                            addToQueue(configs.code, inputs.code, content.code, handleOpen).then(r => {
-                                console.log(r.json().then((json: any) => {
-                                    console.log(json)
-                                    const res = JSON.parse(json.request)
-                                    const newModalContent = []
-                                    for (let i = 0; i < res.length; i++) {
-                                        if (typeof res[i] === "string") {
-                                            newModalContent.push(res[i])
-                                        } else {
-                                            newModalContent.push(JSON.stringify(res[i]))
-                                        }
-                                    }
-                                    console.log(newModalContent)
-                                    setModalContent(newModalContent)
-
-                                }))
-                                console.log(r)
-                            })
-                        }}>Add to Queue</Button></div>
 
                     </div>
 
@@ -271,16 +194,16 @@ export const AddToQueue = (props: {
     );
 }
 
-const addToQueue = async (config: string, inputs: string, python: string, onComplete: () => void) => {
+const addToQueue = async (code: string, problemNumber: number, onComplete: () => void) => {
     // 👇 Send a fetch request to Backend API
+    console.log(btoa(code))
     return fetch("/api", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         }, body: JSON.stringify({
-            config: JSON.stringify(config),
-            python: JSON.stringify(python),
-            inputs: JSON.stringify(inputs)
+            code: btoa(code),
+            problemNumber: problemNumber
         })
         ,
     }).then((res) => {

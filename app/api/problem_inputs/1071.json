@@ -1,0 +1,22 @@
+{
+  "title": "Greatest Common Divisor of Strings",
+  "description": "String",
+  "tests": [
+    {
+      "input": "(\"ABCABC\", \"ABC\")",
+      "displayInput": "\"ABCABC\", \"ABC\"",
+      "output": "\"ABC\""
+    },
+    {
+      "input": "(\"ABABAB\", \"ABAB\")",
+      "displayInput": "\"ABABAB\", \"ABAB\"",
+      "output": "\"AB\""
+    },
+    {
+      "input": "(\"LEET\", \"CODE\")",
+      "displayInput": "\"LEET\", \"CODE\"",
+      "output": "\"\""
+    }
+  ],
+  "functionName": "gcdOfStrings"
+}

@@ -26,14 +26,6 @@ export async function POST(
         const newCode = baseCode ? baseCode + '\n\n\n' + decodedCode : decodedCode
         const codeEncoded = btoa(newCode)
         const baseCodeEncoded = baseCode ? btoa(baseCode) : undefined
-        console.log(atob(codeEncoded))
-        console.log(
-            {
-                code: code,
-                tests: tests,
-                functionName: functionName,
-            }
-        )
         const result = await axios.post('https://022hfroav5.execute-api.us-east-2.amazonaws.com/default/leet', {
             code: codeEncoded,
             tests: tests,
@@ -45,7 +37,6 @@ export async function POST(
             console.log(err);
             return err
         })
-        console.log(result);
         return Response.json({
             tests: tests,
             code: code,

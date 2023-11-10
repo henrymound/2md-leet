@@ -1,6 +1,7 @@
 import {Metadata} from "next";
 import {getProblems} from "@/lib/helpers/fetching";
 import Link from "next/link";
+import {Box} from "@mui/material";
 
 export const metadata: Metadata = {
     title: "Problem",
@@ -9,21 +10,19 @@ export default async function ProblemList() {
     const problems = await getProblems()
     const content = (
         <section>
-            <h2><Link href={"/"}>Home</Link></h2>
-            <br/>
             {problems.map((problem) => (
                 <div key={problem.id}>
-                    <h3><Link href={`/problem/${problem.id}`}>{problem.title}</Link></h3>
+                    <h2 style={{fontWeight: "bold"}}><Link href={`/problem/${problem.id}`}>{problem.title}</Link></h2>
                     <p>{problem.description}</p>
-                    <br/>
                 </div>
             ))}
         </section>
     )
     return (
-        <div>
-            <h1>Problems</h1>
+        <Box className="prose lg:prose-xl px-8 m-auto my-4 sm:my-16"
+        >
+            <h1>All Problems</h1>
             {content}
-        </div>
+        </Box>
     )
 }

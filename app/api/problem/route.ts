@@ -24,20 +24,12 @@ export async function POST(
         const fileContents = fs.readFileSync(fullPath, 'utf8');
         const solutionFileContents = fs.readFileSync(fullSolutionPath, 'utf8');
         const inputFileContents = fs.readFileSync(fullInputPath, 'utf8');
-        const {data, content} = matter(fileContents);
-        const {data: inputData, content: inputContent} = matter(inputFileContents);
-        const {data: solutionData, content: solutionContent} = matter(solutionFileContents);
-        // const htmlFile = await unified()
-        //     .use(remarkParse)
-        //     .use(remarkRehype)
-        //     .use(rehypeSanitize)
-        //     .use(rehypeStringify)
-        //     .process(content)
-
-        const markdown = content
+        const {content} = matter(fileContents);
+        const {content: inputContent} = matter(inputFileContents);
+        const {content: solutionContent} = matter(solutionFileContents);
 
         return Response.json({
-            content: markdown,
+            content: content,
             inputContent: inputContent,
             solutionContent: solutionContent,
         }, {

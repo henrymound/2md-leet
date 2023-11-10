@@ -1,4 +1,6 @@
 {
+  "title": "Two Sum",
+  "description": "Array Traversal, Hash Table",
   "tests": [
     {
       "input": "([2,7,11,15], 9)",

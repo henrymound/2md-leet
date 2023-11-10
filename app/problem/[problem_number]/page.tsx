@@ -18,7 +18,18 @@ export default function Problem(params: {
 
     return (
         <div>
-            <Suspense fallback={"Loading..."}>
+            <Suspense fallback={<div style={{
+                display: "flex",
+                width: "100vw",
+                height: "100vh",
+                flexDirection: "row",
+                justifyContent: "center",
+                justifyItems: "center",
+                alignContent: "center",
+                alignItems: "center"
+            }}>
+                <p>Loading...</p>
+            </div>}>
                 <ProblemDetails data={problem} theme={theme ?? "tomorrow"}/>
                 <AddToQueue theme={theme2} data={problem} problem={params.params.problem_number as unknown as number}/>
             </Suspense>

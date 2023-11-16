@@ -31,6 +31,8 @@ export async function POST(
             tests: tests,
             baseCode: baseCodeEncoded,
             functionName: functionName,
+        }, {
+            headers: {'Content-Type': 'application/json'}
         }).then(res => {
             return res.data;
         }).catch((err) => {

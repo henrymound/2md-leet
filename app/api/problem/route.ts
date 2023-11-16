@@ -42,8 +42,6 @@ export async function POST(
         }, {
             status: 200,
         });
-        // Handle any other HTTP method
-
     }
 
 }

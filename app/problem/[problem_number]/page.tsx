@@ -1,8 +1,8 @@
-'use client'
+// 'use client'
 import {getProblem} from "@/lib/helpers/fetching";
-import React, {Suspense, useState} from "react";
+import React, {Suspense} from "react";
 import {ProblemDetails} from "@/app/problem/[problem_number]/components/ProblemDetails";
-import {AddToQueue, THEME_TO_BG} from "@/components/CodeSnippets";
+import {AddToQueue} from "@/components/CodeSnippets";
 
 type ProblemParams = {
     problem_number: string // From url
@@ -14,7 +14,7 @@ export default function Problem(params: {
     const problem = getProblem(params.params.problem_number as unknown as number)
     const searchParams = params.searchParams
     const theme = searchParams.theme as string | undefined
-    const [theme2, setTheme2] = useState<THEME_TO_BG>(THEME_TO_BG.SOLARIZED_LIGHT)
+    // const [theme2, setTheme2] = useState<THEME_TO_BG>(THEME_TO_BG.SOLARIZED_LIGHT)
 
     return (
         <div>
@@ -31,7 +31,8 @@ export default function Problem(params: {
                 <p>Loading...</p>
             </div>}>
                 <ProblemDetails data={problem} theme={theme ?? "tomorrow"}/>
-                <AddToQueue theme={theme2} data={problem} problem={params.params.problem_number as unknown as number}/>
+                <AddToQueue theme={undefined} data={problem}
+                            problem={params.params.problem_number as unknown as number}/>
             </Suspense>
 
         </div>

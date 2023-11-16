@@ -1,4 +1,5 @@
 import axios from "axios";
+import {headers} from "next/headers";
 
 export const getProblems = async (): Promise<Problem[]> => {
     const problems = [1, 2, 1071];
@@ -10,7 +11,8 @@ export const getProblems = async (): Promise<Problem[]> => {
     return toReturn
 }
 export const getProblem = async (num: number): Promise<Problem> => {
-    const res = await axios.post("http://localhost:3000/api/problem", {
+    const host = headers().get("host");
+    const res = await axios.post(`http://${host}/api/problem`, {
         problemNumber: num
     }, {
         headers: {'Content-Type': 'application/json'}

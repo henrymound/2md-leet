@@ -13,7 +13,6 @@ const Editor = ({data, onChange, holder}: Props) => {
     //add a reference to editor
     const ref = useRef<EditorJS>();
 
-    //initialize editorjs
     useEffect(() => {
         //initialize editor if we don't have a reference
         if (!ref.current) {
@@ -36,7 +35,7 @@ const Editor = ({data, onChange, holder}: Props) => {
                 ref.current.destroy();
             }
         };
-    }, []);
+    });
 
     return <div id={holder} className="prose max-w-full"/>;
 };

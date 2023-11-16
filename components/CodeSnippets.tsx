@@ -36,7 +36,7 @@ export const AddToQueue = (props: {
         Promise.resolve(props.data).then((problem) => {
             setContent({code: problem.solution})
         })
-    }, []);
+    });
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
         addToQueue(content.code, props.problem, () => {

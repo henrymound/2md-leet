@@ -3,18 +3,34 @@ import {getProblem} from "@/lib/helpers/fetching";
 import React, {Suspense} from "react";
 import {ProblemDetails} from "@/app/problem/[problem_number]/components/ProblemDetails";
 import {AddToQueue} from "@/components/CodeSnippets";
+import {Metadata, ResolvingMetadata} from "next";
+import "../../globals.css"
 
 type ProblemParams = {
-    problem_number: string // From url
-}
-export default function Problem(params: {
-    params: ProblemParams,
+    params: { problem_number: string },
     searchParams: { [key: string]: string | string[] | undefined }
-}) {
-    const problem = getProblem(params.params.problem_number as unknown as number)
-    const searchParams = params.searchParams
+}
+
+
+export async function generateMetadata(
+    props: ProblemParams,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    // read route params
+    const {params} = props
+    const problemNumber = params.problem_number as unknown as number
+    const problem = await getProblem(problemNumber)
+    return {
+        title: `${problem.title} | code.2md`,
+    }
+}
+
+
+export default function Problem(props: ProblemParams) {
+    const problemNumber = props.params.problem_number as unknown as number
+    const problem = getProblem(problemNumber)
+    const searchParams = props.searchParams
     const theme = searchParams.theme as string | undefined
-    // const [theme2, setTheme2] = useState<THEME_TO_BG>(THEME_TO_BG.SOLARIZED_LIGHT)
 
     return (
         <div>
@@ -26,13 +42,12 @@ export default function Problem(params: {
                 justifyContent: "center",
                 justifyItems: "center",
                 alignContent: "center",
-                alignItems: "center"
+                alignItems: "center",
             }}>
                 <p>Loading...</p>
             </div>}>
                 <ProblemDetails data={problem} theme={theme ?? "tomorrow"}/>
-                <AddToQueue theme={undefined} data={problem}
-                            problem={params.params.problem_number as unknown as number}/>
+                <AddToQueue data={problem} problem={problemNumber}/>
             </Suspense>
 
         </div>

@@ -35,7 +35,7 @@ const Editor = ({data, onChange, holder}: Props) => {
                 ref.current.destroy();
             }
         };
-    });
+    }, []);
 
     return <div id={holder} className="prose max-w-full"/>;
 };

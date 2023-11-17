@@ -1,7 +1,7 @@
 import React, {memo} from "react";
 import "prismjs/components/prism-jsx";
 import "prismjs/components/prism-tsx";
-import "prismjs/themes/prism-tomorrow.min.css";
+// import "prismjs/themes/prism-tomorrow.min.css";
 
 type Props = {
     code: string;

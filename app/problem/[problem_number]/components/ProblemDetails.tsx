@@ -7,6 +7,7 @@ import rehypeStringify from "rehype-stringify";
 import remarkHtml from "remark-html";
 import Link from "next/link";
 import {Box} from "@mui/material";
+import "./../../../globals.css"
 
 export const ProblemDetails = async (props: {
     data: Promise<Problem>,
@@ -27,7 +28,8 @@ export const ProblemDetails = async (props: {
                 <Link href={"/problem"}>Home</Link>
             </Box>
             <link rel="stylesheet" type="text/css"
-                  href={`https://unpkg.com/prismjs@0.0.1/themes/prism-${props.theme}.css`}/>
+                // href={`https://unpkg.com/prismjs@0.0.1/themes/prism-${props.theme}.css`}
+            />
             <article
                 className="prose lg:prose-xl px-8 m-auto my-4 sm:my-16"
                 dangerouslySetInnerHTML={{__html: innerHtmlFile}}

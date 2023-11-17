@@ -1,29 +1,30 @@
-'use client'
 import React from "react";
+import {getProblems} from "@/lib/helpers/fetching";
+import Link from "next/link";
+import {Box} from "@mui/material";
+import {Metadata} from "next";
 
+export const metadata: Metadata = {
+    title: "Home | code.2md",
+}
 
-export default function Home() {
-
+export default async function Home() {
+    const problems = await getProblems()
+    const content = (
+        <section>
+            {problems.map((problem) => (
+                <div key={problem.id}>
+                    <h2 style={{fontWeight: "bold"}}><Link href={`/problem/${problem.id}`}>{problem.title}</Link></h2>
+                    <p>{problem.description}</p>
+                </div>
+            ))}
+        </section>
+    )
     return (
-        <main>
-            {/*<Box className="flex min-h-screen flex-col items-center justify-between p-24" bgcolor={"white"}>*/}
-            {/*    <Select*/}
-            {/*        labelId="select-theme-label"*/}
-            {/*        id="select-theme"*/}
-            {/*        value={theme}*/}
-            {/*        label="theme"*/}
-            {/*        onChange={(event) => {*/}
-            {/*            setTheme(event.target.value as THEME_TO_BG)*/}
-            {/*        }}*/}
-            {/*    >*/}
-            {/*        <MenuItem value={THEME_TO_BG.PRISM_OKAIDIA}>Okaidia</MenuItem>*/}
-            {/*        <MenuItem value={THEME_TO_BG.PRISM_FUNKY}>Funky</MenuItem>*/}
-            {/*        <MenuItem value={THEME_TO_BG.TOMORROW}>Tomorrow</MenuItem>*/}
-            {/*        <MenuItem value={THEME_TO_BG.SOLARIZED_LIGHT}>Solarized Light</MenuItem>*/}
-            {/*        <MenuItem value={THEME_TO_BG.SOLARISED_DARK}>Solarized Dark</MenuItem>*/}
-            {/*        <MenuItem value={THEME_TO_BG.TWILIGHT}>Twilight</MenuItem>*/}
-            {/*    </Select>*/}
-            {/*</Box>*/}
-        </main>
+        <Box className="prose lg:prose-xl px-8 m-auto my-4 sm:my-16"
+        >
+            <h1>All Problems</h1>
+            {content}
+        </Box>
     )
 }

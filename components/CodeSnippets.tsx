@@ -36,7 +36,7 @@ export const AddToQueue = (props: {
         Promise.resolve(props.data).then((problem) => {
             setContent({code: problem.solution})
         })
-    });
+    }, []);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
         addToQueue(content.code, props.problem, () => {
@@ -95,12 +95,12 @@ export const AddToQueue = (props: {
                         {/*<code>*/}
                         <Editor
                             style={{
-                                background: "#272822",
+                                // background: "#272822",
                                 borderRadius: "10px",
                                 // color: props.theme === THEME_TO_BG.SOLARIZED_LIGHT ? "black" : "white"
                             }}
 
-                            textareaClassName={"language-python"}
+                            textareaClassName={"custom-language-textarea"}
                             placeholder="Type some code…"
                             value={`${content.code}`}
                             onValueChange={(code) => {
@@ -108,8 +108,8 @@ export const AddToQueue = (props: {
                             }}
                             highlight={(code) => highlight(code, languages.python!, 'python')}
                             padding={10}
-                            className={"language-python"}
-                            preClassName={"language-python-pre"}
+                            className={`custom-language`}
+                            preClassName={"custom-language-pre"}
                         />
 
 
